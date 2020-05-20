@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello world!");
         for (String file : readFilesToCopy()) {
             copyFile(file);
         }

@@ -49,7 +49,7 @@ done
 # Download Docker images and prepare files-to-copy.txt
 IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${OPERATOR_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE} ${JET_OPERATOR_IMAGE}"
 for IMAGE in ${IMAGES}; do
-	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | cut -d':' -f1).tar"
+	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/_/").tar"
 	FILE="src/main/resources/${FILENAME}"
 	echo "Saving ${IMAGE} in the file ${FILE}"
 	if ! docker pull ${IMAGE}; then

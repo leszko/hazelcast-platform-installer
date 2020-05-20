@@ -2,19 +2,42 @@
 
 Hazelcast platform can be installed in the air-gapped OpenShift environments. Here are a list of instructions you need to follow.
 
-## Step 1: Push Docker images into your registry
+## Requirements
+
+* Up and running OpenShift cluster and the `oc` command installed and configured
+* Docker registry (deployed separately or provided together with OpenShift)
+* Docker installed and logged into Docker registry
+* [Helm 3](https://helm.sh/docs/intro/install/) tool installed
+
+## Hazelcast Enterprise
+
+To run Hazelcast Enterprise, you need to load the related Docker images into your Docker registry and then start Hazelcast cluster using Helm.
+
+### Step 1: Load Hazelcast Enterprise Docker images into your registry
+
+Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
+
+		docker load hazelcast-enterprise.tar
+		docker tag hazelcast/hazelcast-enterprise:4.0.1 <your-docker-registry>/hazelcast/hazelcast-enterprise:4.0.1
+		docker push <your-docker-registry>/hazelcast/hazelcast-enterprise:4.0.1
+
+		docker load management-center.tar
+		docker tag hazelcast/hazelcast-enterprise:4.0.1 <your-docker-registry>/hazelcast/management-center:4.0.1
+		docker push <your-docker-registry>/hazelcast/management-center:4.0.1
+
+### Step 2: Install Hazelcast Enterprise in OpenShift
 
 TODO
 
-## Step 2: Update image names in OpenShift configuration files
+## Hazelcast Jet Enterprise
 
 TODO
 
-## Step 3: Install Hazelcast Enterprise in OpenShift
+### Step 1: Load Hazelcast Jet Enterprise Docker images into your registry
 
-The best method to install Hazelcast Enterprise in OpenShift is to follow the guidelines for the Hazelcast Enterprise Operator installation available [here](INSTALL_HAZELCAST_ENTERPRISE_OPERATOR.md).
+TODO
 
-## Step 4: Install Hazelcast Jet Enterprise in OpenShift
+### Step 2: Install Hazelcast Jet Enterprise in OpenShift
 
-The best method to install Hazelcast Jet Enterprise in OpenShift is to follow the guidelines for the Hazelcast Jet Enterprise Operator installation available [here](INSTALL_HAZELCAST_JET_ENTERPRISE_OPERATOR.md)
+TODO
 

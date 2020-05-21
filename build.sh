@@ -6,7 +6,7 @@ if [ "$#" -ne 10 ]; then
     echo "./build.sh <platform-version> <docker-hub/rhel> <hz-enterprise-version> <hz-management-center-version> <hz-helm-chart-version> <hz-license-key> <jet-enterprise-version> <jet-management-center-version> <jet-helm-chart-version> <jet-license-key>"
     echo
     echo "For example, for Hazelcast Platform 4.0.1 build from RHEL, execute the following:"
-    echo "./build.sh 4.0.1 docker-hub 4.0.1 4.0.2 3.2.1 <hz-license-key> 4.1 4.1 1.6.0 <jet-license-key>"
+    echo "./build.sh 4.0.1 rhel 4.0-1-1 4.0-2 3.2.1 <hz-license-key> 4.1-1 4.1-1 1.6.0 <jet-license-key>"
     exit 1
 fi
 

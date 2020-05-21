@@ -17,28 +17,28 @@ To run Hazelcast Enterprise, you need to load related Docker images into your Do
 
 Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
 
-	docker load hazelcast-enterprise.tar
-	docker tag hazelcast/hazelcast-enterprise:4.0.1 <your-docker-registry>/hazelcast/hazelcast-enterprise:4.0.1
-	docker push <your-docker-registry>/hazelcast/hazelcast-enterprise:4.0.1
+	docker load hazelcast-enterprise-HAZELCAST_ENTERPRISE_VERSION.tar
+	docker tag hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
+	docker push <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
 
-	docker load management-center.tar
-	docker tag hazelcast/hazelcast-enterprise:4.0.1 <your-docker-registry>/hazelcast/management-center:4.0.1
-	docker push <your-docker-registry>/hazelcast/management-center:4.0.1
+	docker load management-center-MANAGEMENT_CENTER_VERSION.tar
+	docker tag hazelcast/hazelcast-enterprise:MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/management-center:MANAGEMENT_CENTER_VERSION
+	docker push <your-docker-registry>/hazelcast/management-center:MANAGEMENT_CENTER_VERSION
 
 ### Step 2: Install Hazelcast Enterprise in OpenShift
 
 To install Hazelcast Enterprise together with Hazelcast Management Center application, you need first to create a secret with the Hazelcast license key.
 
-		oc create secret generic hz-license-key --from-literal=key=<hz-license-key>
+		oc create secret generic hz-license-key --from-literal=key=HZ_LICENSE_KEY
 
 Then, run the following command.
 
-	helm install my-release hazelcast-enterprise-3.2.1.tgz \
+	helm install my-release hazelcast-enterprise-HELM_CHART_VERSION.tgz \
 		-f hazelcast-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='' \
 		--set hazelcast.licenseKeySecretName=hz-license-key \
-		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-enterprise,image.tag=4.0.1 \
-		--set mancenter.image.repository=<your-docker-registry>/hazelcast/management-center,mancenter.image.tag=4.0.1
+		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-enterprise,image.tag=HAZELCAST_ENTERPRISE_VERSION \
+		--set mancenter.image.repository=<your-docker-registry>/hazelcast/management-center,mancenter.image.tag=MANAGEMENT_CENTER_VERSION
 
 You should see that the Hazelcast cluster and Management Center are started.
 
@@ -59,28 +59,28 @@ To run Hazelcast Jet Enterprise, you need to load related Docker images into you
 
 Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
 
-	docker load hazelcast-jet-enterprise.tar
-	docker tag hazelcast/hazelcast-jet-enterprise:4.0.1 <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:4.0.1
-	docker push <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:4.0.1
+	docker load hazelcast-jet-enterprise-HAZELCAST_JET_ENTERPRISE_VERSION.tar
+	docker tag hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
+	docker push <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
 
-	docker load management-center.tar
-	docker tag hazelcast/hazelcast-jet-enterprise:4.0.1 <your-docker-registry>/hazelcast/jet-management-center:4.0.1
-	docker push <your-docker-registry>/hazelcast/jet-management-center:4.0.1
+	docker load management-center-JET_MANAGEMENT_CENTER_VERSION.tar
+	docker tag hazelcast/hazelcast-jet-enterprise:JET_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/jet-management-center:JET_MANAGEMENT_CENTER_VERSION
+	docker push <your-docker-registry>/hazelcast/jet-management-center:JET_MANAGEMENT_CENTER_VERSION
 
 ### Step 2: Install Hazelcast Jet Enterprise in OpenShift
 
 To install Hazelcast Jet Enterprise together with Hazelcast Jet Management Center application, you need first to create a secret with the Hazelcast Jet license key.
 
-	oc create secret generic hz-jet-license-key --from-literal=key=<hz-jet-license-key>
+	oc create secret generic hz-jet-license-key --from-literal=key=JET_LICENSE_KEY
 
 Then, run the following command.
 
-	helm install my-release-jet hazelcast-jet-enterprise-1.6.0.tgz \
+	helm install my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
 		-f hazelcast-jet-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='' \
 		--set jet.licenseKeySecretName=hz-jet-license-key \
-		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-enterprise,image.tag=4.1 \
-		--set managementcenter.image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-management-center,managementcenter.image.tag=4.1
+		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-enterprise,image.tag=HAZELCAST_JET_ENTERPRISE_VERSION \
+		--set managementcenter.image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-management-center,managementcenter.image.tag=JET_MANAGEMENT_CENTER_VERSION
 
 You should see that the Hazelcast cluster and Management Center are started.
 

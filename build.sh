@@ -38,7 +38,7 @@ fi
 
 # Check dependencies
 echo "Checking dependencies..."
-for dep in docker cut curl sed mvn java; do
+for dep in docker cut curl sed mvn java tar; do
     if hash ${dep} 2>/dev/null; then
         echo ${dep} installed...
     else
@@ -69,27 +69,36 @@ done
 # done
 
 # Download Helm Charts
-helm repo add hazelcast https://hazelcast.github.io/charts/
-helm repo update
-helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d src/main/resources/
-echo "hazelcast/hazelcast-enterprise:${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
-helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d src/main/resources/
-echo "hazelcast/hazelcast-jet-enterprise:${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+# helm repo add hazelcast https://hazelcast.github.io/charts/
+# helm repo update
+# helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d src/main/resources/
+# echo "hazelcast/hazelcast-enterprise:${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+# helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d src/main/resources/
+# echo "hazelcast/hazelcast-jet-enterprise:${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
 
 # Extract values.yaml from Helm Charts
-tar zxf src/main/resources/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
-cp hazelcast-enterprise/values.yaml src/main/resources/hazelcast-enterprise-values.yaml
-echo "hazelcast-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
-rm -r hazelcast-enterprise
-tar zxf src/main/resources/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz -C .
-cp hazelcast-jet-enterprise/values.yaml src/main/resources/hazelcast-jet-enterprise-values.yaml
-echo "hazelcast-jet-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
-rm -r hazelcast-jet-enterprise
+# tar zxf src/main/resources/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
+# cp hazelcast-enterprise/values.yaml src/main/resources/hazelcast-enterprise-values.yaml
+# echo "hazelcast-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
+# rm -r hazelcast-enterprise
+# tar zxf src/main/resources/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz -C .
+# cp hazelcast-jet-enterprise/values.yaml src/main/resources/hazelcast-jet-enterprise-values.yaml
+# echo "hazelcast-jet-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
+# rm -r hazelcast-jet-enterprise
 
 # Prepare README Instructions
-# TODO
 cp INSTALLATION_GUIDE.md src/main/resources/
-echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
+sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
+
+# echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
 
 # Build Java Installation Executable JAR
 # mvn clean compile assembly:single

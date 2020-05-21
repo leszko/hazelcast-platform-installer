@@ -24,9 +24,9 @@ Run the following command and specify your credentials when prompted.
 
 #### Build RHEL-based installer
 
-The syntax is the same as in the quick start. Fort the latest Hazelcast Platform RHEL build, run the following command.
+The syntax is the same as in the quick start. For the latest Hazelcast Platform RHEL build, run the following command.
 
-
+	./build.sh 4.0.1 rhel 4.0-1-1 4.0-2 3.2.1 <hz-license-key> 4.1-1 4.1-1 1.6.0 <jet-license-key>
 
 ## Using installer
 

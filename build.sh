@@ -6,7 +6,7 @@ if [ "$#" -ne 10 ]; then
     echo "./build.sh <platform-version> <docker-hub/rhel> <hz-enterprise-version> <hz-management-center-version> <hz-helm-chart-version> <hz-license-key> <jet-enterprise-version> <jet-management-center-version> <jet-helm-chart-version> <jet-license-key>"
     echo
     echo "For example, for Hazelcast Platform 4.0.1 build from RHEL, execute the following:"
-    echo "./build.sh 4.0.1 rhel 4.0.1 4.0.2 3.2.1 <hz-license-key> 3.2.1 3.2.1 1.2.0 <jet-license-key>"
+    echo "./build.sh 4.0.1 docker-hub 4.0.1 4.0.2 3.2.1 <hz-license-key> 4.1 4.1 1.6.0 <jet-license-key>"
     exit 1
 fi
 
@@ -72,9 +72,9 @@ done
 helm repo add hazelcast https://hazelcast.github.io/charts/
 helm repo update
 helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d src/main/resources/
-echo "hazelcast/hazelcast-enterprise:${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+echo "hazelcast-enterprise-${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
 helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d src/main/resources/
-echo "hazelcast/hazelcast-jet-enterprise:${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+echo "hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
 
 # Extract values.yaml from Helm Charts
 tar zxf src/main/resources/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
@@ -103,3 +103,8 @@ echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
 
 # Build Java Installation Executable JAR
 mvn clean compile assembly:single
+
+# Clean up
+rm src/main/resources/*
+mv target/hazelcast-platform-installer-1.0-SNAPSHOT-jar-with-dependencies.jar ./hazelcast-platform-installer-${PLATFORM_VERSION}.jar
+rm -r target

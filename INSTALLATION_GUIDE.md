@@ -22,7 +22,7 @@ Execute the following command to load all Hazelcast Enterprise Docker images int
 	docker push <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
 
 	docker load management-center-HZ_MANAGEMENT_CENTER_VERSION.tar
-	docker tag hazelcast/hazelcast-enterprise:HZ_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
+	docker tag hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 	docker push <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 
 ### Step 2: Install Hazelcast Enterprise in OpenShift
@@ -63,9 +63,9 @@ Execute the following command to load all Hazelcast Enterprise Docker images int
 	docker tag hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
 	docker push <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
 
-	docker load management-center-JET_MANAGEMENT_CENTER_VERSION.tar
-	docker tag hazelcast/hazelcast-jet-enterprise:JET_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/jet-management-center:JET_MANAGEMENT_CENTER_VERSION
-	docker push <your-docker-registry>/hazelcast/jet-management-center:JET_MANAGEMENT_CENTER_VERSION
+	docker load hazelcast-jet-management-center-JET_MANAGEMENT_CENTER_VERSION.tar
+	docker tag hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION
+	docker push <your-docker-registry>/hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION
 
 ### Step 2: Install Hazelcast Jet Enterprise in OpenShift
 

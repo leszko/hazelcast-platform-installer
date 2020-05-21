@@ -21,9 +21,9 @@ Execute the following command to load all Hazelcast Enterprise Docker images int
 	docker tag hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
 	docker push <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
 
-	docker load management-center-MANAGEMENT_CENTER_VERSION.tar
-	docker tag hazelcast/hazelcast-enterprise:MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/management-center:MANAGEMENT_CENTER_VERSION
-	docker push <your-docker-registry>/hazelcast/management-center:MANAGEMENT_CENTER_VERSION
+	docker load management-center-HZ_MANAGEMENT_CENTER_VERSION.tar
+	docker tag hazelcast/hazelcast-enterprise:HZ_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
+	docker push <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 
 ### Step 2: Install Hazelcast Enterprise in OpenShift
 
@@ -33,12 +33,12 @@ To install Hazelcast Enterprise together with Hazelcast Management Center applic
 
 Then, run the following command.
 
-	helm install my-release hazelcast-enterprise-HELM_CHART_VERSION.tgz \
+	helm install my-release hazelcast-enterprise-HZ_HELM_CHART_VERSION.tgz \
 		-f hazelcast-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='' \
 		--set hazelcast.licenseKeySecretName=hz-license-key \
 		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-enterprise,image.tag=HAZELCAST_ENTERPRISE_VERSION \
-		--set mancenter.image.repository=<your-docker-registry>/hazelcast/management-center,mancenter.image.tag=MANAGEMENT_CENTER_VERSION
+		--set mancenter.image.repository=<your-docker-registry>/hazelcast/management-center,mancenter.image.tag=HZ_MANAGEMENT_CENTER_VERSION
 
 You should see that the Hazelcast cluster and Management Center are started.
 

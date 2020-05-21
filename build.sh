@@ -10,16 +10,16 @@ if [ "$#" -ne 10 ]; then
     exit 1
 fi
 
-PLATFORM_VERSION=$1
-REPO=$2
-HAZELCAST_VERSION=$3
-MANAGEMENT_CENTER_VERSION=$4
-HELM_CHART_VERSION=$5
-HZ_LICENSE_KEY=$6
-HAZELCAST_JET_VERSION=$7
-JET_MANAGEMENT_CENTER_VERSION=$8
-JET_HELM_CHART_VERSION=$9
-JET_LICENSE_KEY=$10
+PLATFORM_VERSION=${1}
+REPO=${2}
+HAZELCAST_VERSION=${3}
+MANAGEMENT_CENTER_VERSION=${4}
+HELM_CHART_VERSION=${5}
+HZ_LICENSE_KEY=${6}
+HAZELCAST_JET_VERSION=${7}
+JET_MANAGEMENT_CENTER_VERSION=${8}
+JET_HELM_CHART_VERSION=${9}
+JET_LICENSE_KEY=${10}
 
 if [[ "${REPO}" == "rhel" ]]; then
 	HAZELCAST_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:${HAZELCAST_VERSION}"
@@ -51,46 +51,47 @@ done
  rm src/main/resources/* -f
 
 # Download Docker images
-# IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
-# for IMAGE in ${IMAGES}; do
-# 	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/-/").tar"
-# 	FILE="src/main/resources/${FILENAME}"
-# 	echo "Saving ${IMAGE} in the file ${FILE}"
-# 	if ! docker pull ${IMAGE}; then
-# 		if [[ "${REPO}" == "rhel" ]]; then
-# 			echo "Error while pulling image from Red Hat Registry. Make sure that:"
-# 			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
-# 			echo "- image tag is correct '${IMAGE}'"
-# 			exit 1
-# 		fi
-# 	fi
-# 	docker save ${IMAGE} -o ${FILE}
-# 	echo "${FILENAME}" >> src/main/resources/files-to-copy.txt
-# done
+IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
+for IMAGE in ${IMAGES}; do
+	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/-/").tar"
+	FILE="src/main/resources/${FILENAME}"
+	echo "Saving ${IMAGE} in the file ${FILE}"
+	if ! docker pull ${IMAGE}; then
+		if [[ "${REPO}" == "rhel" ]]; then
+			echo "Error while pulling image from Red Hat Registry. Make sure that:"
+			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
+			echo "- image tag is correct '${IMAGE}'"
+			exit 1
+		fi
+	fi
+	docker save ${IMAGE} -o ${FILE}
+	echo "${FILENAME}" >> src/main/resources/files-to-copy.txt
+done
 
 # Download Helm Charts
-# helm repo add hazelcast https://hazelcast.github.io/charts/
-# helm repo update
-# helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d src/main/resources/
-# echo "hazelcast/hazelcast-enterprise:${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
-# helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d src/main/resources/
-# echo "hazelcast/hazelcast-jet-enterprise:${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+helm repo add hazelcast https://hazelcast.github.io/charts/
+helm repo update
+helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d src/main/resources/
+echo "hazelcast/hazelcast-enterprise:${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d src/main/resources/
+echo "hazelcast/hazelcast-jet-enterprise:${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
 
 # Extract values.yaml from Helm Charts
-# tar zxf src/main/resources/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
-# cp hazelcast-enterprise/values.yaml src/main/resources/hazelcast-enterprise-values.yaml
-# echo "hazelcast-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
-# rm -r hazelcast-enterprise
-# tar zxf src/main/resources/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz -C .
-# cp hazelcast-jet-enterprise/values.yaml src/main/resources/hazelcast-jet-enterprise-values.yaml
-# echo "hazelcast-jet-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
-# rm -r hazelcast-jet-enterprise
+tar zxf src/main/resources/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
+cp hazelcast-enterprise/values.yaml src/main/resources/hazelcast-enterprise-values.yaml
+echo "hazelcast-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
+rm -r hazelcast-enterprise
+tar zxf src/main/resources/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz -C .
+cp hazelcast-jet-enterprise/values.yaml src/main/resources/hazelcast-jet-enterprise-values.yaml
+echo "hazelcast-jet-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
+rm -r hazelcast-jet-enterprise
 
 # Prepare README Instructions
 cp INSTALLATION_GUIDE.md src/main/resources/
+
 sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HZ_MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HZ_HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
 sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
 sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
 sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
@@ -98,7 +99,7 @@ sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" src/
 sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
 sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
 
-# echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
+echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
 
 # Build Java Installation Executable JAR
-# mvn clean compile assembly:single
+mvn clean compile assembly:single

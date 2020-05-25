@@ -48,7 +48,10 @@ for dep in docker cut curl sed mvn java tar; do
 done
 
 # Clean up
- rm src/main/resources/* -f
+rm src/main/resources/* -f
+
+# Copy EULA license
+cp eula-licenses.zip src/main/resources/
 
 # Download Docker images
 IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"

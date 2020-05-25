@@ -60,20 +60,22 @@ mkdir -p hazelcast-platform/hazelcast-jet-enterprise
 
 # Download Docker images
 IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
-#for IMAGE in ${IMAGES}; do
-#	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/-/").tar"
-#	FILE="hazelcast-platform/${FILENAME}"
-#	echo "Saving ${IMAGE} in the file ${FILE}"
-#	if ! docker pull ${IMAGE}; then
-#		if [[ "${REPO}" == "rhel" ]]; then
-#			echo "Error while pulling image from Red Hat Registry. Make sure that:"
-#			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
-#			echo "- image tag is correct '${IMAGE}'"
-#			exit 1
-#		fi
-#	fi
-#	docker save ${IMAGE} -o ${FILE}
-#done
+for IMAGE in ${IMAGES}; do
+	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/-/").tar"
+	FILE="hazelcast-platform/${FILENAME}"
+	echo "Saving ${IMAGE} in the file ${FILE}"
+	if ! docker pull ${IMAGE}; then
+		if [[ "${REPO}" == "rhel" ]]; then
+			echo "Error while pulling image from Red Hat Registry. Make sure that:"
+			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
+			echo "- image tag is correct '${IMAGE}'"
+			exit 1
+		fi
+	fi
+	docker save ${IMAGE} -o ${FILE}
+done
+mv hazelcast-platform/hazelcast-jet*.tar hazelcast-platform/hazelcast-jet-enterprise/
+mv hazelcast-platform/*.tar hazelcast-platform/hazelcast-enterprise/
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/

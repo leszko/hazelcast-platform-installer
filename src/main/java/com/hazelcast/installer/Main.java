@@ -44,7 +44,6 @@ public class Main {
     }
 
     private static void copyFile(String source, String destination) throws IOException {
-        System.out.println(String.format("Extracting file %s", source));
         URL inputUrl = Main.class.getResource(String.format("/%s", source));
         File destinationFile = new File(destination);
         FileUtils.copyURLToFile(inputUrl, destinationFile);

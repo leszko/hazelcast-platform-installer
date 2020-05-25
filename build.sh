@@ -38,7 +38,7 @@ fi
 
 # Check dependencies
 echo "Checking dependencies..."
-for dep in docker cut curl sed mvn java tar; do
+for dep in docker cut curl sed mvn java tar zip; do
     if hash ${dep} 2>/dev/null; then
         echo ${dep} installed...
     else
@@ -49,60 +49,64 @@ done
 
 # Clean up
 rm src/main/resources/* -f
+rm -r hazelcast-platform -f
 
 # Copy EULA license
 cp eula-licenses.zip src/main/resources/
 
+# Create temp directories with all Hazelcast Platform files
+mkdir -p hazelcast-platform/hazelcast-enterprise
+mkdir -p hazelcast-platform/hazelcast-jet-enterprise
+
 # Download Docker images
 IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
-for IMAGE in ${IMAGES}; do
-	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/-/").tar"
-	FILE="src/main/resources/${FILENAME}"
-	echo "Saving ${IMAGE} in the file ${FILE}"
-	if ! docker pull ${IMAGE}; then
-		if [[ "${REPO}" == "rhel" ]]; then
-			echo "Error while pulling image from Red Hat Registry. Make sure that:"
-			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
-			echo "- image tag is correct '${IMAGE}'"
-			exit 1
-		fi
-	fi
-	docker save ${IMAGE} -o ${FILE}
-	echo "${FILENAME}" >> src/main/resources/files-to-copy.txt
-done
+#for IMAGE in ${IMAGES}; do
+#	FILENAME="$(echo "${IMAGE}" | sed -e "s/^registry\.connect\.redhat\.com\///" | sed -e "s/^hazelcast\///" | sed -e "s/\:/-/").tar"
+#	FILE="hazelcast-platform/${FILENAME}"
+#	echo "Saving ${IMAGE} in the file ${FILE}"
+#	if ! docker pull ${IMAGE}; then
+#		if [[ "${REPO}" == "rhel" ]]; then
+#			echo "Error while pulling image from Red Hat Registry. Make sure that:"
+#			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
+#			echo "- image tag is correct '${IMAGE}'"
+#			exit 1
+#		fi
+#	fi
+#	docker save ${IMAGE} -o ${FILE}
+#done
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/
 helm repo update
-helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d src/main/resources/
-echo "hazelcast-enterprise-${HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
-helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d src/main/resources/
-echo "hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz" >> src/main/resources/files-to-copy.txt
+helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d hazelcast-platform/hazelcast-enterprise/
+helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d hazelcast-platform/hazelcast-jet-enterprise
 
 # Extract values.yaml from Helm Charts
-tar zxf src/main/resources/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
-cp hazelcast-enterprise/values.yaml src/main/resources/hazelcast-enterprise-values.yaml
-echo "hazelcast-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
+tar zxf hazelcast-platform/hazelcast-enterprise/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz -C .
+cp hazelcast-enterprise/values.yaml hazelcast-platform/hazelcast-enterprise/hazelcast-enterprise-values.yaml
 rm -r hazelcast-enterprise
-tar zxf src/main/resources/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz -C .
-cp hazelcast-jet-enterprise/values.yaml src/main/resources/hazelcast-jet-enterprise-values.yaml
-echo "hazelcast-jet-enterprise-values.yaml" >> src/main/resources/files-to-copy.txt
+tar zxf hazelcast-platform/hazelcast-jet-enterprise/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz -C .
+cp hazelcast-jet-enterprise/values.yaml hazelcast-platform/hazelcast-jet-enterprise/hazelcast-jet-enterprise-values.yaml
 rm -r hazelcast-jet-enterprise
 
 # Prepare README Instructions
-cp INSTALLATION_GUIDE.md src/main/resources/
+cp INSTALL_GUIDE.md hazelcast-platform/
+cp HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md hazelcast-platform/hazelcast-enterprise
+cp HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md hazelcast-platform/hazelcast-jet-enterprise
 
-sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/HZ_MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/HZ_HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" src/main/resources/INSTALLATION_GUIDE.md
-sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" src/main/resources/INSTALLATION_GUIDE.md
+sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/HZ_MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/HZ_HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
 
-echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
+# Zip all files to copy
+cd hazelcast-platform
+zip -r ../src/main/resources/hazelcast-platform.zip *
+cd ..
 
 # Build Java Installation Executable JAR
 mvn install:install-file -Dfile=LAPApp.jar -DgroupId=com.ibm -DartifactId=lapapp -Dversion=1.0 -Dpackaging=jar
@@ -110,5 +114,6 @@ mvn clean compile assembly:single
 
 # Clean up
 rm src/main/resources/*
+rm -r hazelcast-platform -f
 mv target/hazelcast-platform-installer-1.0-SNAPSHOT-jar-with-dependencies.jar ./hazelcast-platform-installer-${PLATFORM_VERSION}.jar
 rm -r target

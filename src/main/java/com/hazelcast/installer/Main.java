@@ -5,13 +5,9 @@ import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Main {
 
@@ -20,15 +16,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
         extractEula();
         acceptEula();
-        extractFiles();
+        extractHazelcastPlatform();
     }
 
+
     private static void extractEula() throws IOException {
-        String eulaLicensesFile = "eula-licenses.zip";
-        copyFile(eulaLicensesFile);
-        ZipFile zipFile = new ZipFile(eulaLicensesFile);
-        zipFile.extractAll("eula-licenses");
-        new File(eulaLicensesFile).delete();
+        extractFile("eula-licenses.zip", "eula-licenses");
     }
 
     private static void acceptEula() throws URISyntaxException {
@@ -39,25 +32,21 @@ public class Main {
         }
     }
 
-    private static void extractFiles() throws IOException {
-        for (String file : readFilesToCopy()) {
-            copyFile(file);
-        }
+    private static void extractHazelcastPlatform() throws IOException {
+        extractFile("hazelcast-platform.zip", ".");
     }
 
-    private static List<String> readFilesToCopy() throws FileNotFoundException {
-        List<String> result = new ArrayList<String>();
-        Scanner scanner = new Scanner(Main.class.getResourceAsStream("/files-to-copy.txt"));
-        while (scanner.hasNextLine()) {
-            result.add(scanner.nextLine());
-        }
-        return result;
+    private static void extractFile(String zipFilename, String destinationPath) throws IOException {
+        copyFile(zipFilename, zipFilename);
+        ZipFile zipFile = new ZipFile(zipFilename);
+        zipFile.extractAll(destinationPath);
+        new File(zipFilename).delete();
     }
 
-    private static void copyFile(String filename) throws IOException {
-        System.out.println(String.format("Extracting file %s", filename));
-        URL inputUrl = Main.class.getResource(String.format("/%s", filename));
-        File destinationFile = new File(filename);
+    private static void copyFile(String source, String destination) throws IOException {
+        System.out.println(String.format("Extracting file %s", source));
+        URL inputUrl = Main.class.getResource(String.format("/%s", source));
+        File destinationFile = new File(destination);
         FileUtils.copyURLToFile(inputUrl, destinationFile);
     }
 

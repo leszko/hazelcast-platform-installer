@@ -102,6 +102,7 @@ sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" src/main/resources/INSTALLATION_
 echo INSTALLATION_GUIDE.md >> src/main/resources/files-to-copy.txt
 
 # Build Java Installation Executable JAR
+mvn install:install-file -Dfile=LAPApp.jar -DgroupId=com.ibm -DartifactId=lapapp -Dversion=1.0 -Dpackaging=jar
 mvn clean compile assembly:single
 
 # Clean up

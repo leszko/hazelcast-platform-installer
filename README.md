@@ -35,7 +35,3 @@ The installer is an executable, you can run it with the following command.
 	java -jar hazelcast-platform-installer-<version>.jar
 
 It will extract all files needed for the offline Hazelcast Enterprise (and Hazelcast Jet Enterprise) installation on the OpenShift environment. Please check `INSTALLATION_GUIDE.md` for the detailed instructions.
-
-## Testing with Docker Desktop
-
-TODO

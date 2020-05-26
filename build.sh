@@ -64,22 +64,22 @@ mkdir -p hazelcast-platform/hazelcast-enterprise
 mkdir -p hazelcast-platform/hazelcast-jet-enterprise
 
 # Download Docker images
-#IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
-#for IMAGE in ${IMAGES}; do
-#	FILE="hazelcast-platform/$(image_to_filename ${IMAGE})"
-#	echo "Saving ${IMAGE} in the file ${FILE}"
-#	if ! docker pull ${IMAGE}; then
-#		if [[ "${REPO}" == "rhel" ]]; then
-#			echo "Error while pulling image from Red Hat Registry. Make sure that:"
-#			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
-#			echo "- image tag is correct '${IMAGE}'"
-#			exit 1
-#		fi
-#	fi
-#	docker save ${IMAGE} -o ${FILE}
-#done
-#mv hazelcast-platform/hazelcast-jet*.tar hazelcast-platform/hazelcast-jet-enterprise/
-#mv hazelcast-platform/*.tar hazelcast-platform/hazelcast-enterprise/
+IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
+for IMAGE in ${IMAGES}; do
+	FILE="hazelcast-platform/$(image_to_filename ${IMAGE})"
+	echo "Saving ${IMAGE} in the file ${FILE}"
+	if ! docker pull ${IMAGE}; then
+		if [[ "${REPO}" == "rhel" ]]; then
+			echo "Error while pulling image from Red Hat Registry. Make sure that:"
+			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
+			echo "- image tag is correct '${IMAGE}'"
+			exit 1
+		fi
+	fi
+	docker save ${IMAGE} -o ${FILE}
+done
+mv hazelcast-platform/hazelcast-jet*.tar hazelcast-platform/hazelcast-jet-enterprise/
+mv hazelcast-platform/*.tar hazelcast-platform/hazelcast-enterprise/
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/
@@ -101,19 +101,19 @@ cp HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md hazelcast-platform/hazelcast-enterprise
 cp HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md hazelcast-platform/hazelcast-jet-enterprise
 
 sed -i "s/HAZELCAST_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_IMAGE})/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
-sed -i "s/HAZELCAST_ENTERPRISE_IMAGE/${HAZELCAST_IMAGE}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s~HAZELCAST_ENTERPRISE_IMAGE~${HAZELCAST_IMAGE}~g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/HZ_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${MANAGEMENT_CENTER_IMAGE})/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
-sed -i "s/HZ_MANAGEMENT_CENTER_IMAGE/${MANAGEMENT_CENTER_IMAGE}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s~HZ_MANAGEMENT_CENTER_IMAGE~${MANAGEMENT_CENTER_IMAGE}~g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/HZ_MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/HZ_HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" hazelcast-platform/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
 
 sed -i "s/HAZELCAST_JET_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_JET_IMAGE})/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
-sed -i "s/HAZELCAST_JET_ENTERPRISE_IMAGE/${HAZELCAST_JET_IMAGE}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s~HAZELCAST_JET_ENTERPRISE_IMAGE~${HAZELCAST_JET_IMAGE}~g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/JET_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${JET_MANAGEMENT_CENTER_IMAGE})/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
-sed -i "s/JET_MANAGEMENT_CENTER_IMAGE/${JET_MANAGEMENT_CENTER_IMAGE}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
+sed -i "s~JET_MANAGEMENT_CENTER_IMAGE~${JET_MANAGEMENT_CENTER_IMAGE}~g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
 sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" hazelcast-platform/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md

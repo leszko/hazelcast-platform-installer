@@ -6,12 +6,12 @@ To run Hazelcast Jet Enterprise, you need to load related Docker images into you
 
 Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
 
-	docker load hazelcast-jet-enterprise-HAZELCAST_JET_ENTERPRISE_VERSION.tar
-	docker tag hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
+	docker load -i HAZELCAST_JET_ENTERPRISE_FILENAME
+	docker tag HAZELCAST_JET_ENTERPRISE_IMAGE <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
 	docker push <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION
 
-	docker load hazelcast-jet-management-center-JET_MANAGEMENT_CENTER_VERSION.tar
-	docker tag hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION
+	docker load -i JET_MANAGEMENT_CENTER_FILENAME
+	docker tag JET_MANAGEMENT_CENTER_IMAGE <your-docker-registry>/hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION
 	docker push <your-docker-registry>/hazelcast/hazelcast-jet-management-center:JET_MANAGEMENT_CENTER_VERSION
 
 ## Step 2: Install Hazelcast Jet Enterprise in OpenShift
@@ -37,4 +37,4 @@ You should see that the Hazelcast cluster and Management Center are started.
 	my-release-jet-hazelcast-jet-enterprise-1                         1/1       Running   0          88s
 	my-release-jet-hazelcast-jet-enterprise-management-center-j8hgx   1/1       Running   0          2m9s
 
-Note that you can configure all Hazelcast installation parameters by changing the `hazelcast-jet-enterprise-values.yaml` file.
+Note that you can configure all Hazelcast installation parameters by changing `hazelcast-jet-enterprise-values.yaml` file.

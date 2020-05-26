@@ -33,7 +33,12 @@ public class Main {
     }
 
     private static void extractHazelcastPlatform() throws IOException {
+        System.out.println("Extracting Hazelcast Platform installation files, it may take a few minutes...");
+
         extractFile("hazelcast-platform.zip", ".");
+
+        System.out.println();
+        System.out.println("Please check INSTALL_GUIDE.md for the installation instructions");
     }
 
     private static void extractFile(String zipFilename, String destinationPath) throws IOException {

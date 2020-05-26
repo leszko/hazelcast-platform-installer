@@ -6,12 +6,12 @@ To run Hazelcast Enterprise, you need to load related Docker images into your Do
 
 Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
 
-	docker load hazelcast-enterprise-HAZELCAST_ENTERPRISE_VERSION.tar
-	docker tag hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
+	docker load -i HAZELCAST_ENTERPRISE_FILENAME
+	docker tag HAZELCAST_ENTERPRISE_IMAGE <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
 	docker push <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
 
-	docker load management-center-HZ_MANAGEMENT_CENTER_VERSION.tar
-	docker tag hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
+	docker load -i HZ_MANAGEMENT_CENTER_FILENAME
+	docker tag HZ_MANAGEMENT_CENTER_IMAGE <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 	docker push <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 
 ## Step 2: Install Hazelcast Enterprise in OpenShift

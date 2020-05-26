@@ -24,7 +24,7 @@ Then, run the following command.
 
 	helm install my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
 		-f hazelcast-jet-enterprise-values.yaml \
-		--set securityContext.runAsUser='',securityContext.fsGroup='' \
+		--set securityContext.runAsUser='',securityContext.fsGroup='',securityContext.runAsGroup='' \
 		--set jet.licenseKeySecretName=hz-jet-license-key \
 		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-enterprise,image.tag=HAZELCAST_JET_ENTERPRISE_VERSION \
 		--set managementcenter.image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-management-center,managementcenter.image.tag=JET_MANAGEMENT_CENTER_VERSION

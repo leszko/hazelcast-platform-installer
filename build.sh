@@ -79,8 +79,8 @@ for IMAGE in ${IMAGES}; do
 	fi
 	docker save ${IMAGE} -o ${FILE}
 done
-mv "${PLATFORM_DIRECTORY}/hazelcast-jet*.tar" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/"
-mv "${PLATFORM_DIRECTORY}/*.tar" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/"
+mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/
+mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/

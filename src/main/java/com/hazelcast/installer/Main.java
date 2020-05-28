@@ -38,7 +38,7 @@ public class Main {
         extractFile("hazelcast-platform.zip", ".");
 
         System.out.println();
-        System.out.println("Please check INSTALL_GUIDE.md for the installation instructions");
+        System.out.println("Please check hazelcast-platform-4.0.1/INSTALL_GUIDE.md for the installation instructions");
     }
 
     private static void extractFile(String zipFilename, String destinationPath) throws IOException {

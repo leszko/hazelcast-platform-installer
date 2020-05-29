@@ -29,9 +29,10 @@ The syntax is the same as in the quick start. For the latest Hazelcast Platform 
 	./build.sh 4.0.1 rhel 4.0-1-1 4.0-2 3.2.1 <hz-license-key> 4.1-1 4.1-1 1.6.0 <jet-license-key>
 
 ## Using installer
+- `hazelcast-platform-installer-<version>.jar` - installer JAR
+- `install.sh` - script to start the installer
+- `jdk` - directory with OpenJDK binaries for Linux amd64
 
-The installer is an executable, you can run it with the following command.
+To start the installation you need to unzip the file and then run `./install.sh`.
 
-	java -jar hazelcast-platform-installer-<version>.jar
-
-It will extract all files needed for the offline Hazelcast Enterprise (and Hazelcast Jet Enterprise) installation on the OpenShift environment. Please check `INSTALLATION_GUIDE.md` for the detailed instructions.
+It will extract all files needed for the offline Hazelcast Enterprise (and Hazelcast Jet Enterprise) installation on the OpenShift environment. Please check `INSTALL_GUIDE.md` for the detailed instructions.

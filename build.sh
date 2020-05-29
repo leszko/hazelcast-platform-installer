@@ -153,5 +153,5 @@ sed -i "s/PLATFORM_VERSION/${PLATFORM_VERSION}/g" "${PLATFORM_PACKAGE_DIRECTORY}
 zip -r ${PLATFORM_PACKAGE_DIRECTORY}.zip ${PLATFORM_PACKAGE_DIRECTORY}
 
 # Clean up Hazelcast Platform Package
-rm -r ${PLATFORM_PACKAGE_DIRECTORY}
-rm  openjdk-14.0.1_linux-x64_bin.tar.gz
+rm -r -f ${PLATFORM_PACKAGE_DIRECTORY}
+rm openjdk-14.0.1_linux-x64_bin.tar.gz

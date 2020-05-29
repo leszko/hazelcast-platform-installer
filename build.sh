@@ -43,7 +43,7 @@ fi
 
 # Check dependencies
 echo "Checking dependencies..."
-for dep in docker cut curl sed mvn java tar zip; do
+for dep in docker cut curl sed mvn java tar zip wget; do
   if hash ${dep} 2>/dev/null; then
     echo ${dep} installed...
   else
@@ -140,3 +140,18 @@ rm src/main/resources/*
 rm -r ${PLATFORM_DIRECTORY} -f
 mv target/hazelcast-platform-installer-1.0-SNAPSHOT-jar-with-dependencies.jar ./hazelcast-platform-installer-${PLATFORM_VERSION}.jar
 rm -r target
+
+# Create Hazelcast Platform Package (Platform JAR + OpenJDK distribution)
+wget https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz
+tar xf openjdk-14.0.1_linux-x64_bin.tar.gz
+PLATFORM_PACKAGE_DIRECTORY="hazelcast-platform-package-${PLATFORM_VERSION}"
+mkdir ${PLATFORM_PACKAGE_DIRECTORY}
+mv jdk-14.0.1 ${PLATFORM_PACKAGE_DIRECTORY}/jdk
+mv hazelcast-platform-installer-${PLATFORM_VERSION}.jar ${PLATFORM_PACKAGE_DIRECTORY}
+cp install.sh ${PLATFORM_PACKAGE_DIRECTORY}
+sed -i "s/PLATFORM_VERSION/${PLATFORM_VERSION}/g" "${PLATFORM_PACKAGE_DIRECTORY}/install.sh"
+zip -r ${PLATFORM_PACKAGE_DIRECTORY}.zip ${PLATFORM_PACKAGE_DIRECTORY}
+
+# Clean up Hazelcast Platform Package
+rm -r ${PLATFORM_PACKAGE_DIRECTORY}
+rm  openjdk-14.0.1_linux-x64_bin.tar.gz

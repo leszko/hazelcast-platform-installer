@@ -52,6 +52,8 @@ for dep in docker cut curl sed mvn java tar zip wget; do
   fi
 done
 
+mkdir -p src/main/resources
+
 # Clean up
 rm src/main/resources/* -f
 rm -r hazelcast-platform* -f
@@ -97,9 +99,9 @@ cp hazelcast-jet-enterprise/values.yaml "${PLATFORM_DIRECTORY}/hazelcast-jet-ent
 rm -r hazelcast-jet-enterprise
 
 # Prepare README Instructions
-cp INSTALL_GUIDE.md "${PLATFORM_DIRECTORY}/"
-cp HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md "${PLATFORM_DIRECTORY}/hazelcast-enterprise"
-cp HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise"
+cp INSTALL_GUIDE.md ${PLATFORM_DIRECTORY}/
+cp HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md ${PLATFORM_DIRECTORY}/hazelcast-enterprise
+cp HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise
 
 sed -i "s/HAZELCAST_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_IMAGE})/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
 sed -i "s~HAZELCAST_ENTERPRISE_IMAGE~${HAZELCAST_IMAGE}~g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
@@ -129,7 +131,7 @@ sed -i "s/JET_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${JET_MANAGEMENT_CE
 sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" "${PLATFORM_DIRECTORY}/INSTALL_GUIDE.md"
 
 # Zip all files to copy
-zip -r "src/main/resources/hazelcast-platform.zip" "${PLATFORM_DIRECTORY}"
+zip -r "src/main/resources/hazelcast-platform.zip" ${PLATFORM_DIRECTORY}
 
 # Build Java Installation Executable JAR
 mvn install:install-file -Dfile=LAPApp.jar -DgroupId=com.ibm -DartifactId=lapapp -Dversion=1.0 -Dpackaging=jar

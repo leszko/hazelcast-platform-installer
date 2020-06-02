@@ -6,12 +6,12 @@ image_to_filename() {
   echo ${FILENAME}
 }
 # Check parameters
-if [ "$#" -ne 10 ]; then
+if [ "$#" -ne 13 ]; then
   echo "Illegal number of parameters"
-  echo "./build.sh <platform-version> <docker-hub/rhel> <hz-enterprise-version> <hz-management-center-version> <hz-helm-chart-version> <hz-license-key> <jet-enterprise-version> <jet-management-center-version> <jet-helm-chart-version> <jet-license-key>"
+  echo "./build.sh <platform-version> <docker-hub/rhel> <hz-enterprise-version> <hz-management-center-version> <hz-helm-chart-version> <reference-manual-version> <ops-guide-version> <hz-license-key> <docker-hub/rhel> <jet-enterprise-version> <jet-management-center-version> <jet-helm-chart-version> <jet-license-key>"
   echo
   echo "For example, for Hazelcast Platform 4.0.1 build from RHEL, execute the following:"
-  echo "./build.sh 4.0.1 rhel 4.0-1-1 4.0-2 3.2.1 <hz-license-key> 4.1-1 4.1-1 1.6.0 <jet-license-key>"
+  echo "./build.sh 4.0.1 rhel 4.0-1-1 4.0-2 3.2.1 4.0.1 4.0.1 <hz-license-key> rhel 4.1-1 4.1-1 1.6.0 <jet-license-key>"
   exit 1
 fi
 
@@ -20,11 +20,14 @@ REPO=${2}
 HAZELCAST_VERSION=${3}
 MANAGEMENT_CENTER_VERSION=${4}
 HELM_CHART_VERSION=${5}
-HZ_LICENSE_KEY=${6}
-HAZELCAST_JET_VERSION=${7}
-JET_MANAGEMENT_CENTER_VERSION=${8}
-JET_HELM_CHART_VERSION=${9}
-JET_LICENSE_KEY=${10}
+REFERENCE_MANUAL_VERSION=${6}
+OPS_GUIDE_VERSION=${7}
+HZ_LICENSE_KEY=${8}
+JET_REPO=${9}
+HAZELCAST_JET_VERSION=${10}
+JET_MANAGEMENT_CENTER_VERSION=${11}
+JET_HELM_CHART_VERSION=${12}
+JET_LICENSE_KEY=${13}
 
 if [[ "${REPO}" == "rhel" ]]; then
   HAZELCAST_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:${HAZELCAST_VERSION}"
@@ -41,9 +44,20 @@ else
   exit 1
 fi
 
+if [[ "${JET_REPO}" == "rhel" ]]; then
+  HAZELCAST_JET_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-jet-enterprise-4:${HAZELCAST_JET_VERSION}"
+  JET_MANAGEMENT_CENTER_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-jet-management-center-4:${JET_MANAGEMENT_CENTER_VERSION}"
+elif [[ "${JET_REPO}" == "docker-hub" ]]; then
+  HAZELCAST_JET_IMAGE="hazelcast/hazelcast-jet-enterprise:${HAZELCAST_JET_VERSION}"
+  JET_MANAGEMENT_CENTER_IMAGE="hazelcast/hazelcast-jet-management-center:${JET_MANAGEMENT_CENTER_VERSION}"
+else
+  echo "Wrong repository name, it should be 'rhel' or 'docker-hub', but you specified '${REPO}'"
+  exit 1
+fi
+
 # Check dependencies
 echo "Checking dependencies..."
-for dep in docker cut curl sed mvn java tar zip wget; do
+for dep in docker cut curl sed mvn java tar zip wget gradle; do
   if hash ${dep} 2>/dev/null; then
     echo ${dep} installed...
   else
@@ -67,22 +81,42 @@ mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-enterprise"
 mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise"
 
 # Download Docker images
-IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
-for IMAGE in ${IMAGES}; do
-	FILE="${PLATFORM_DIRECTORY}/$(image_to_filename ${IMAGE})"
-	echo "Saving ${IMAGE} in the file ${FILE}"
-	if ! docker pull ${IMAGE}; then
-		if [[ "${REPO}" == "rhel" ]]; then
-			echo "Error while pulling image from Red Hat Registry. Make sure that:"
-			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
-			echo "- image tag is correct '${IMAGE}'"
-			exit 1
-		fi
-	fi
-	docker save ${IMAGE} -o ${FILE}
-done
-mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/
-mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
+#IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
+#for IMAGE in ${IMAGES}; do
+#	FILE="${PLATFORM_DIRECTORY}/$(image_to_filename ${IMAGE})"
+#	echo "Saving ${IMAGE} in the file ${FILE}"
+#	if ! docker pull ${IMAGE}; then
+#		if [[ "${REPO}" == "rhel" || "${JET_REPO}" == "rhel" ]]; then
+#			echo "Error while pulling image from Red Hat Registry. Make sure that:"
+#			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
+#			echo "- image tag is correct '${IMAGE}'"
+#			exit 1
+#		fi
+#	fi
+#	docker save ${IMAGE} -o ${FILE}
+#done
+#mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/
+#mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
+
+# Download Reference Manual PDF
+#curl -o ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-reference-manual.pdf https://docs.hazelcast.org/docs/${PLATFORM_VERSION}/manual/pdf/index.pdf
+
+# Build and include Ops Guide PDF
+if [[ "${OPS_GUIDE_VERSION}" == 4* ]]; then
+  git clone https://github.com/hazelcast/hazelcast-operations-and-deployment-guide-4.0.git hazelcast-operations-and-deployment-guide
+  cd hazelcast-operations-and-deployment-guide
+else
+  git clone https://github.com/hazelcast/hazelcast-operations-and-deployment-guide.git hazelcast-operations-and-deployment-guide
+  cd hazelcast-operations-and-deployment-guide
+  git fetch --all
+  git checkout v${OPS_GUIDE_VERSION}
+fi
+gradle build
+cd ..
+cp hazelcast-operations-and-deployment-guide/build/asciidoc/pdf/index.pdf ${PLATFORM_DIRECTORY}/hazelcast-operations-and-deployment-guide.pdf
+rm -r -f hazelcast-operations-and-deployment-guide
+
+exit 1
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/

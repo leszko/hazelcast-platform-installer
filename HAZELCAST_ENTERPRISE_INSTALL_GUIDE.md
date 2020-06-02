@@ -39,3 +39,9 @@ You should see that the Hazelcast cluster and Management Center are started.
 	my-release-hazelcast-enterprise-mancenter-0   1/1       Running   0          2m5s
 
 Note that you can configure all Hazelcast installation parameters by changing the `hazelcast-enterprise-values.yaml` file.
+
+# Further Documentation
+
+You can check the attached documentation files for more information on how to configure Hazelcast:
+* [Hazelcast Reference Manual](hazelcast-reference-manual.pdf)
+* [Hazelcast Operations and Deployment Guide](hazelcast-operations-and-deployment-guide.pdf)

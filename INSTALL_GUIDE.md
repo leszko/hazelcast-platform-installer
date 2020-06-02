@@ -19,6 +19,8 @@ The package has the following structure.
     |   +-- HZ_MANAGEMENT_CENTER_FILENAME
     |   +-- hazelcast-enterprise-HZ_HELM_CHART_VERSION.tgz
     |   +-- hazelcast-enterprise-values.yaml
+    |   +-- hazelcast-reference-manual.pdf
+    |   +-- hazelcast-operations-and-deployment-guide.pdf
     +-- hazelcast-jet-enterprise
     |   +-- HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md
     |   +-- HAZELCAST_JET_ENTERPRISE_FILENAME

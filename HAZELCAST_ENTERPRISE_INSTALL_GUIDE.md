@@ -18,7 +18,7 @@ Execute the following command to load all Hazelcast Enterprise Docker images int
 
 To install Hazelcast Enterprise together with Hazelcast Management Center application, you need first to create a secret with the Hazelcast license key.
 
-		oc create secret generic hz-license-key --from-literal=key=HZ_LICENSE_KEY
+	oc create secret generic hz-license-key --from-literal=key=HZ_LICENSE_KEY
 
 Then, run the following command.
 

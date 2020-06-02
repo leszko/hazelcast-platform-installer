@@ -30,15 +30,16 @@ JET_HELM_CHART_VERSION=${12}
 JET_LICENSE_KEY=${13}
 
 if [[ "${REPO}" == "rhel" ]]; then
-  HAZELCAST_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:${HAZELCAST_VERSION}"
-  MANAGEMENT_CENTER_IMAGE="registry.connect.redhat.com/hazelcast/management-center-4-rhel8:${MANAGEMENT_CENTER_VERSION}"
-  HAZELCAST_JET_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-jet-enterprise-4:${HAZELCAST_JET_VERSION}"
-  JET_MANAGEMENT_CENTER_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-jet-management-center-4:${JET_MANAGEMENT_CENTER_VERSION}"
+  if [[ "${HAZELCAST_VERSION}" == 4* ]]; then
+    HAZELCAST_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:${HAZELCAST_VERSION}"
+    MANAGEMENT_CENTER_IMAGE="registry.connect.redhat.com/hazelcast/management-center-4-rhel8:${MANAGEMENT_CENTER_VERSION}"
+  else
+    HAZELCAST_IMAGE="registry.connect.redhat.com/hazelcast/hazelcast-3-rhel7:${HAZELCAST_VERSION}"
+    MANAGEMENT_CENTER_IMAGE="registry.connect.redhat.com/hazelcast/management-center-3-rhel7:${MANAGEMENT_CENTER_VERSION}"
+  fi
 elif [[ "${REPO}" == "docker-hub" ]]; then
   HAZELCAST_IMAGE="hazelcast/hazelcast-enterprise:${HAZELCAST_VERSION}"
   MANAGEMENT_CENTER_IMAGE="hazelcast/management-center:${MANAGEMENT_CENTER_VERSION}"
-  HAZELCAST_JET_IMAGE="hazelcast/hazelcast-jet-enterprise:${HAZELCAST_JET_VERSION}"
-  JET_MANAGEMENT_CENTER_IMAGE="hazelcast/hazelcast-jet-management-center:${JET_MANAGEMENT_CENTER_VERSION}"
 else
   echo "Wrong repository name, it should be 'rhel' or 'docker-hub', but you specified '${REPO}'"
   exit 1

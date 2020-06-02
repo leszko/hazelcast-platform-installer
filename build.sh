@@ -81,25 +81,25 @@ mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-enterprise"
 mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise"
 
 # Download Docker images
-#IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
-#for IMAGE in ${IMAGES}; do
-#	FILE="${PLATFORM_DIRECTORY}/$(image_to_filename ${IMAGE})"
-#	echo "Saving ${IMAGE} in the file ${FILE}"
-#	if ! docker pull ${IMAGE}; then
-#		if [[ "${REPO}" == "rhel" || "${JET_REPO}" == "rhel" ]]; then
-#			echo "Error while pulling image from Red Hat Registry. Make sure that:"
-#			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
-#			echo "- image tag is correct '${IMAGE}'"
-#			exit 1
-#		fi
-#	fi
-#	docker save ${IMAGE} -o ${FILE}
-#done
-#mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/
-#mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
+IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
+for IMAGE in ${IMAGES}; do
+	FILE="${PLATFORM_DIRECTORY}/$(image_to_filename ${IMAGE})"
+	echo "Saving ${IMAGE} in the file ${FILE}"
+	if ! docker pull ${IMAGE}; then
+		if [[ "${REPO}" == "rhel" || "${JET_REPO}" == "rhel" ]]; then
+			echo "Error while pulling image from Red Hat Registry. Make sure that:"
+			echo "- you are logged into Red Hat Container Registry with 'docker login registry.connect.redhat.com'"
+			echo "- image tag is correct '${IMAGE}'"
+			exit 1
+		fi
+	fi
+	docker save ${IMAGE} -o ${FILE}
+done
+mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/
+mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
 
 # Download Reference Manual PDF
-#curl -o ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-reference-manual.pdf https://docs.hazelcast.org/docs/${PLATFORM_VERSION}/manual/pdf/index.pdf
+curl -o ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-reference-manual.pdf https://docs.hazelcast.org/docs/${REFERENCE_MANUAL_VERSION}/manual/pdf/index.pdf
 
 # Build and include Ops Guide PDF
 if [[ "${OPS_GUIDE_VERSION}" == 4* ]]; then
@@ -113,10 +113,8 @@ else
 fi
 gradle build
 cd ..
-cp hazelcast-operations-and-deployment-guide/build/asciidoc/pdf/index.pdf ${PLATFORM_DIRECTORY}/hazelcast-operations-and-deployment-guide.pdf
+cp hazelcast-operations-and-deployment-guide/build/asciidoc/pdf/index.pdf ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-operations-and-deployment-guide.pdf
 rm -r -f hazelcast-operations-and-deployment-guide
-
-exit 1
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/

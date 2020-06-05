@@ -28,13 +28,6 @@ The package has the following structure.
     |   +-- hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz
     |   +-- hazelcast-enterprise-values.yaml
 
-## Requirements
-
-* Up and running OpenShift cluster and the `oc` command installed and configured
-* Docker registry (deployed separately or provided together with OpenShift)
-* Docker installed and logged into Docker registry
-* [Helm 3](https://helm.sh/docs/intro/install/) tool installed
-
 ## Installation steps
 
 You can find an installation guide using the following links:

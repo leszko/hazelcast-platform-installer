@@ -29,7 +29,7 @@ Then, run the following command.
 		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-enterprise,image.tag=HAZELCAST_ENTERPRISE_VERSION \
 		--set mancenter.image.repository=<your-docker-registry>/hazelcast/management-center,mancenter.image.tag=HZ_MANAGEMENT_CENTER_VERSION
 
-You should see that the Hazelcast cluster and Management Center are started.
+You should see that the Hazelcast cluster and Management Center started.
 
 	$ oc get pods
 	NAME                                          READY     STATUS    RESTARTS   AGE

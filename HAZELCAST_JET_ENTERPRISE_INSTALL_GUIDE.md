@@ -29,7 +29,7 @@ Then, run the following command.
 		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-enterprise,image.tag=HAZELCAST_JET_ENTERPRISE_VERSION \
 		--set managementcenter.image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-management-center,managementcenter.image.tag=JET_MANAGEMENT_CENTER_VERSION
 
-You should see that the Hazelcast cluster and Management Center are started.
+You should see that the Hazelcast Jet cluster and Hazelcast Jet Management Center started.
 
 	$ oc get pods
 	NAME                                                              READY     STATUS    RESTARTS   AGE
@@ -37,4 +37,4 @@ You should see that the Hazelcast cluster and Management Center are started.
 	my-release-jet-hazelcast-jet-enterprise-1                         1/1       Running   0          88s
 	my-release-jet-hazelcast-jet-enterprise-management-center-j8hgx   1/1       Running   0          2m9s
 
-Note that you can configure all Hazelcast installation parameters by changing `hazelcast-jet-enterprise-values.yaml` file.
+Note that you can configure all Hazelcast Jet installation parameters by changing `hazelcast-jet-enterprise-values.yaml` file.

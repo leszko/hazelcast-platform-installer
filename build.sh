@@ -103,15 +103,10 @@ mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
 curl -o ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-reference-manual.pdf https://docs.hazelcast.org/docs/${REFERENCE_MANUAL_VERSION}/manual/pdf/index.pdf
 
 # Build and include Ops Guide PDF
-if [[ "${OPS_GUIDE_VERSION}" == 4* ]]; then
-  git clone https://github.com/hazelcast/hazelcast-operations-and-deployment-guide-4.0.git hazelcast-operations-and-deployment-guide
-  cd hazelcast-operations-and-deployment-guide
-else
-  git clone https://github.com/hazelcast/hazelcast-operations-and-deployment-guide.git hazelcast-operations-and-deployment-guide
-  cd hazelcast-operations-and-deployment-guide
-  git fetch --all
-  git checkout v${OPS_GUIDE_VERSION}
-fi
+git clone https://github.com/hazelcast/hazelcast-operations-and-deployment-guide.git hazelcast-operations-and-deployment-guide
+cd hazelcast-operations-and-deployment-guide
+git fetch --all
+git checkout v${OPS_GUIDE_VERSION}
 gradle build
 cd ..
 cp hazelcast-operations-and-deployment-guide/build/asciidoc/pdf/index.pdf ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-operations-and-deployment-guide.pdf

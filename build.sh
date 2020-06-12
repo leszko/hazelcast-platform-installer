@@ -76,7 +76,7 @@ rm -r hazelcast-platform* -f
 # Copy EULA license
 cp eula-licenses.zip src/main/resources/
 
-PLATFORM_DIRECTORY="hazelcast-platform-${PLATFORM_VERSION}"
+PLATFORM_DIRECTORY="hazelcast-platform"
 # Create temp directories with all Hazelcast Platform files
 mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-enterprise"
 mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise"

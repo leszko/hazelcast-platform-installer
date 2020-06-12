@@ -4,7 +4,7 @@ To run Hazelcast Jet Enterprise, you need to load related Docker images into you
 
 ## Step 1: Load Hazelcast Jet Enterprise Docker images into your registry
 
-Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
+Execute the following command to load all Hazelcast Jet Enterprise Docker images into your Docker registry.
 
 	docker load -i HAZELCAST_JET_ENTERPRISE_FILENAME
 	docker tag HAZELCAST_JET_ENTERPRISE_IMAGE <your-docker-registry>/hazelcast/hazelcast-jet-enterprise:HAZELCAST_JET_ENTERPRISE_VERSION

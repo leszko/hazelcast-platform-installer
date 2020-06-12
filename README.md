@@ -35,4 +35,4 @@ The syntax is the same as in the quick start. For the latest Hazelcast Platform 
 
 To start the installation you need to unzip the file and then run `./install.sh`.
 
-It will extract all files needed for the offline Hazelcast Enterprise (and Hazelcast Jet Enterprise) installation on the OpenShift environment. Please check `INSTALL_GUIDE.md` for the detailed instructions.
+It will extract all files needed for the offline Hazelcast IMDG Enterprise (and Hazelcast Jet Enterprise) installation on the OpenShift environment. Please check `INSTALL_GUIDE.md` for the detailed instructions.

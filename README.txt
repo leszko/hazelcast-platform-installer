@@ -1,6 +1,6 @@
 # Hazelcast Platform Installer for OpenShift Environments
 
-This package contains the Hazelcast Platform (Hazelcast Enterprise and Hazelcast Jet Enterprise) installer for air-gapped environments. It includes the whole OpenJdk, so no pre-installed Java toolkit is needed.
+This package contains the Hazelcast Platform (Hazelcast IMDG Enterprise and Hazelcast Jet Enterprise) installer for air-gapped environments. It includes the whole OpenJdk, so no pre-installed Java toolkit is needed.
 
 ## Requirements
 
@@ -17,6 +17,6 @@ This package contains the Hazelcast Platform (Hazelcast Enterprise and Hazelcast
 
 ## Documentation
 
-* Hazelcast Enterprise documentation (also included in the package): https://hazelcast.org/imdg/docs/
+* Hazelcast IMDG Enterprise documentation (also included in the package): https://hazelcast.org/imdg/docs/
 * Hazelcast Jet Enterprise documentation: https://jet-start.sh/
 

@@ -1,10 +1,10 @@
-# Install Hazelcast Enterprise in Air Gapped OpenShift environments
+# Install Hazelcast IMDG Enterprise in Air Gapped OpenShift environments
 
-To run Hazelcast Enterprise, you need to load related Docker images into your Docker registry and then start Hazelcast cluster using Helm.
+To run Hazelcast IMDG Enterprise, you need to load related Docker images into your Docker registry and then start Hazelcast cluster using Helm.
 
-## Step 1: Load Hazelcast Enterprise Docker images into your registry
+## Step 1: Load Hazelcast IMDG Enterprise Docker images into your registry
 
-Execute the following command to load all Hazelcast Enterprise Docker images into your Docker registry.
+Execute the following command to load all Hazelcast IMDG Enterprise Docker images into your Docker registry.
 
 	docker load -i HAZELCAST_ENTERPRISE_FILENAME
 	docker tag HAZELCAST_ENTERPRISE_IMAGE <your-docker-registry>/hazelcast/hazelcast-enterprise:HAZELCAST_ENTERPRISE_VERSION
@@ -14,9 +14,9 @@ Execute the following command to load all Hazelcast Enterprise Docker images int
 	docker tag HZ_MANAGEMENT_CENTER_IMAGE <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 	docker push <your-docker-registry>/hazelcast/management-center:HZ_MANAGEMENT_CENTER_VERSION
 
-## Step 2: Install Hazelcast Enterprise in OpenShift
+## Step 2: Install Hazelcast IMDG Enterprise in OpenShift
 
-To install Hazelcast Enterprise together with Hazelcast Management Center application, you need first to create a secret with the Hazelcast license key.
+To install Hazelcast IMDG Enterprise together with Hazelcast Management Center application, you need first to create a secret with the Hazelcast license key.
 
 	oc create secret generic hz-license-key --from-literal=key=HZ_LICENSE_KEY
 

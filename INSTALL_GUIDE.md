@@ -13,7 +13,7 @@ This package contains all files needed to install Hazelcast IMDG Enterprise and 
 The package has the following structure.
 
     +-- INSTALL_GUIDE.md
-    +-- hazelcast-enterprise
+    +-- hazelcast-imdg-enterprise
     |   +-- HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md
     |   +-- HAZELCAST_ENTERPRISE_FILENAME
     |   +-- HZ_MANAGEMENT_CENTER_FILENAME
@@ -26,10 +26,10 @@ The package has the following structure.
     |   +-- HAZELCAST_JET_ENTERPRISE_FILENAME
     |   +-- JET_MANAGEMENT_CENTER_FILENAME
     |   +-- hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz
-    |   +-- hazelcast-enterprise-values.yaml
+    |   +-- hazelcast-jet-enterprise-values.yaml
 
 ## Installation steps
 
 You can find an installation guide using the following links:
-* [Hazelcast IMDG Enterprise Installation Guide](hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md)
+* [Hazelcast IMDG Enterprise Installation Guide](hazelcast-imdg-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md)
 * [Hazelcast Jet Enterprise Installation Guide](hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md)

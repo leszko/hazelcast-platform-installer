@@ -77,9 +77,11 @@ rm -r hazelcast-platform* -f
 cp eula-licenses.zip src/main/resources/
 
 PLATFORM_DIRECTORY="hazelcast-platform"
+IMDG_DIRECTORY="${PLATFORM_DIRECTORY}/ahazelcast-imdg-enterprise"
+JET_DIRECTORY="${PLATFORM_DIRECTORY}/ahazelcast-jet-enterprise"
 # Create temp directories with all Hazelcast Platform files
-mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-enterprise"
-mkdir -p "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise"
+mkdir -p "${IMDG_DIRECTORY}"
+mkdir -p "${JET_DIRECTORY}"
 
 # Download Docker images
 IMAGES="${HAZELCAST_IMAGE} ${MANAGEMENT_CENTER_IMAGE} ${HAZELCAST_JET_IMAGE} ${JET_MANAGEMENT_CENTER_IMAGE}"
@@ -96,11 +98,11 @@ for IMAGE in ${IMAGES}; do
 	fi
 	docker save ${IMAGE} -o ${FILE}
 done
-mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/
-mv ${PLATFORM_DIRECTORY}/*.tar ${PLATFORM_DIRECTORY}/hazelcast-enterprise/
+mv ${PLATFORM_DIRECTORY}/hazelcast-jet*.tar ${JET_DIRECTORY}/
+mv ${PLATFORM_DIRECTORY}/*.tar ${IMDG_DIRECTORY}/
 
 # Download Reference Manual PDF
-curl -o ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-reference-manual.pdf https://docs.hazelcast.org/docs/${REFERENCE_MANUAL_VERSION}/manual/pdf/index.pdf
+curl -o ${IMDG_DIRECTORY}/hazelcast-reference-manual.pdf https://docs.hazelcast.org/docs/${REFERENCE_MANUAL_VERSION}/manual/pdf/index.pdf
 
 # Build and include Ops Guide PDF
 git clone https://github.com/hazelcast/hazelcast-operations-and-deployment-guide.git hazelcast-operations-and-deployment-guide
@@ -109,45 +111,45 @@ git fetch --all
 git checkout v${OPS_GUIDE_VERSION}
 gradle build
 cd ..
-cp hazelcast-operations-and-deployment-guide/build/asciidoc/pdf/index.pdf ${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-operations-and-deployment-guide.pdf
+cp hazelcast-operations-and-deployment-guide/build/asciidoc/pdf/index.pdf ${IMDG_DIRECTORY}/hazelcast-operations-and-deployment-guide.pdf
 rm -r -f hazelcast-operations-and-deployment-guide
 
 # Download Helm Charts
 helm repo add hazelcast https://hazelcast.github.io/charts/
 helm repo update
-helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d "${PLATFORM_DIRECTORY}/hazelcast-enterprise/"
-helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise"
+helm pull hazelcast/hazelcast-enterprise --version ${HELM_CHART_VERSION} -d "${IMDG_DIRECTORY}/"
+helm pull hazelcast/hazelcast-jet-enterprise --version ${JET_HELM_CHART_VERSION} -d "${JET_DIRECTORY}"
 
 # Extract values.yaml from Helm Charts
-tar zxf "${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz" -C .
-cp hazelcast-enterprise/values.yaml "${PLATFORM_DIRECTORY}/hazelcast-enterprise/hazelcast-enterprise-values.yaml"
+tar zxf "${IMDG_DIRECTORY}/hazelcast-enterprise-${HELM_CHART_VERSION}.tgz" -C .
+cp hazelcast-enterprise/values.yaml "${IMDG_DIRECTORY}/hazelcast-enterprise-values.yaml"
 rm -r hazelcast-enterprise
-tar zxf "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz" -C .
-cp hazelcast-jet-enterprise/values.yaml "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/hazelcast-jet-enterprise-values.yaml"
+tar zxf "${JET_DIRECTORY}/hazelcast-jet-enterprise-${JET_HELM_CHART_VERSION}.tgz" -C .
+cp hazelcast-jet-enterprise/values.yaml "${JET_DIRECTORY}/hazelcast-jet-enterprise-values.yaml"
 rm -r hazelcast-jet-enterprise
 
 # Prepare README Instructions
 cp INSTALL_GUIDE.md ${PLATFORM_DIRECTORY}/
-cp HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md ${PLATFORM_DIRECTORY}/hazelcast-enterprise
-cp HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md ${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise
+cp HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md ${IMDG_DIRECTORY}
+cp HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md ${JET_DIRECTORY}
 
-sed -i "s/HAZELCAST_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_IMAGE})/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s~HAZELCAST_ENTERPRISE_IMAGE~${HAZELCAST_IMAGE}~g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/HZ_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${MANAGEMENT_CENTER_IMAGE})/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s~HZ_MANAGEMENT_CENTER_IMAGE~${MANAGEMENT_CENTER_IMAGE}~g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/HZ_MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/HZ_HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" "${PLATFORM_DIRECTORY}/hazelcast-enterprise/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HAZELCAST_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_IMAGE})/g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s~HAZELCAST_ENTERPRISE_IMAGE~${HAZELCAST_IMAGE}~g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HAZELCAST_ENTERPRISE_VERSION/${HAZELCAST_VERSION}/g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HZ_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${MANAGEMENT_CENTER_IMAGE})/g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s~HZ_MANAGEMENT_CENTER_IMAGE~${MANAGEMENT_CENTER_IMAGE}~g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HZ_MANAGEMENT_CENTER_VERSION/${MANAGEMENT_CENTER_VERSION}/g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HZ_HELM_CHART_VERSION/${HELM_CHART_VERSION}/g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HZ_LICENSE_KEY/${HZ_LICENSE_KEY}/g" "${IMDG_DIRECTORY}/HAZELCAST_ENTERPRISE_INSTALL_GUIDE.md"
 
-sed -i "s/HAZELCAST_JET_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_JET_IMAGE})/g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s~HAZELCAST_JET_ENTERPRISE_IMAGE~${HAZELCAST_JET_IMAGE}~g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/JET_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${JET_MANAGEMENT_CENTER_IMAGE})/g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s~JET_MANAGEMENT_CENTER_IMAGE~${JET_MANAGEMENT_CENTER_IMAGE}~g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
-sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" "${PLATFORM_DIRECTORY}/hazelcast-jet-enterprise/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HAZELCAST_JET_ENTERPRISE_FILENAME/$(image_to_filename ${HAZELCAST_JET_IMAGE})/g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s~HAZELCAST_JET_ENTERPRISE_IMAGE~${HAZELCAST_JET_IMAGE}~g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/HAZELCAST_JET_ENTERPRISE_VERSION/${HAZELCAST_JET_VERSION}/g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/JET_MANAGEMENT_CENTER_FILENAME/$(image_to_filename ${JET_MANAGEMENT_CENTER_IMAGE})/g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s~JET_MANAGEMENT_CENTER_IMAGE~${JET_MANAGEMENT_CENTER_IMAGE}~g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/JET_MANAGEMENT_CENTER_VERSION/${JET_MANAGEMENT_CENTER_VERSION}/g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/JET_HELM_CHART_VERSION/${JET_HELM_CHART_VERSION}/g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
+sed -i "s/JET_LICENSE_KEY/${JET_LICENSE_KEY}/g" "${JET_DIRECTORY}/HAZELCAST_JET_ENTERPRISE_INSTALL_GUIDE.md"
 
 sed -i "s/PLATFORM_VERSION/${PLATFORM_VERSION}/g" "src/main/java/com/hazelcast/installer/Main.java"
 

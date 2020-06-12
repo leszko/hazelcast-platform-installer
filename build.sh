@@ -183,6 +183,13 @@ cp README.txt ${PLATFORM_PACKAGE_DIRECTORY}
 sed -i "s/PLATFORM_VERSION/${PLATFORM_VERSION}/g" "${PLATFORM_PACKAGE_DIRECTORY}/install.sh"
 zip -r ${PLATFORM_PACKAGE_DIRECTORY}.zip ${PLATFORM_PACKAGE_DIRECTORY}
 
+# Rename the final file
+if [[ "${PLATFORM_VERSION}" == 3* ]]; then
+  mv ${PLATFORM_PACKAGE_DIRECTORY}.zip ibm_hazelcast_3_x86.zip
+else
+  mv ${PLATFORM_PACKAGE_DIRECTORY}.zip ibm_hazelcast_x86.zip
+fi
+
 # Clean up Hazelcast Platform Package
 rm -r -f ${PLATFORM_PACKAGE_DIRECTORY}
 rm openjdk-14.0.1_linux-x64_bin.tar.gz

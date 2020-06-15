@@ -23,7 +23,7 @@ To install Hazelcast Jet Enterprise together with Hazelcast Jet Management Cente
 Then, depending on the Helm version you use, run one of the following commands.
 
     # Helm 2
-	helm install --name my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
+	helm install --tls --name my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
 		-f hazelcast-jet-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='',securityContext.runAsGroup='' \
 		--set jet.licenseKeySecretName=hz-jet-license-key,managementcenter.licenseKeySecretName=hz-jet-license-key \

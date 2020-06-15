@@ -23,7 +23,7 @@ To install Hazelcast IMDG Enterprise together with Hazelcast Management Center a
 Then, depending on the Helm version you use, run one of the following commands.
 
     # Helm 2
-	helm install --name my-release hazelcast-enterprise-HZ_HELM_CHART_VERSION.tgz \
+	helm install --tls --name my-release hazelcast-enterprise-HZ_HELM_CHART_VERSION.tgz \
 		-f hazelcast-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='' \
 		--set hazelcast.licenseKeySecretName=hz-license-key \

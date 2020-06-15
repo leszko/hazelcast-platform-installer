@@ -20,14 +20,23 @@ To install Hazelcast Jet Enterprise together with Hazelcast Jet Management Cente
 
 	oc create secret generic hz-jet-license-key --from-literal=key=JET_LICENSE_KEY
 
-Then, run the following command.
+Then, depending on the Helm version you use, run one of the following commands.
 
-	helm install my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
+    # Helm 2
+	helm install --name my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
 		-f hazelcast-jet-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='',securityContext.runAsGroup='' \
 		--set jet.licenseKeySecretName=hz-jet-license-key,managementcenter.licenseKeySecretName=hz-jet-license-key \
 		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-enterprise,image.tag=HAZELCAST_JET_ENTERPRISE_VERSION \
 		--set managementcenter.image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-management-center,managementcenter.image.tag=JET_MANAGEMENT_CENTER_VERSION
+	
+	# Helm 3
+	helm install my-release-jet hazelcast-jet-enterprise-JET_HELM_CHART_VERSION.tgz \
+		-f hazelcast-jet-enterprise-values.yaml \
+		--set securityContext.runAsUser='',securityContext.fsGroup='',securityContext.runAsGroup='' \
+		--set jet.licenseKeySecretName=hz-jet-license-key,managementcenter.licenseKeySecretName=hz-jet-license-key \
+		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-enterprise,image.tag=HAZELCAST_JET_ENTERPRISE_VERSION \
+		--set managementcenter.image.repository=<your-docker-registry>/hazelcast/hazelcast-jet-management-center,managementcenter.image.tag=JET_MANAGEMENT_CENTER_VERSION	
 
 You should see that the Hazelcast Jet cluster and Hazelcast Jet Management Center started.
 

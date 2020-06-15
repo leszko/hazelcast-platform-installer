@@ -20,8 +20,17 @@ To install Hazelcast IMDG Enterprise together with Hazelcast Management Center a
 
 	oc create secret generic hz-license-key --from-literal=key=HZ_LICENSE_KEY
 
-Then, run the following command.
+Then, depending on the Helm version you use, run one of the following commands.
 
+    # Helm 2
+	helm install --name my-release hazelcast-enterprise-HZ_HELM_CHART_VERSION.tgz \
+		-f hazelcast-enterprise-values.yaml \
+		--set securityContext.runAsUser='',securityContext.fsGroup='' \
+		--set hazelcast.licenseKeySecretName=hz-license-key \
+		--set image.repository=<your-docker-registry>/hazelcast/hazelcast-enterprise,image.tag=HAZELCAST_ENTERPRISE_VERSION \
+		--set mancenter.image.repository=<your-docker-registry>/hazelcast/management-center,mancenter.image.tag=HZ_MANAGEMENT_CENTER_VERSION
+    
+    # Helm 3
 	helm install my-release hazelcast-enterprise-HZ_HELM_CHART_VERSION.tgz \
 		-f hazelcast-enterprise-values.yaml \
 		--set securityContext.runAsUser='',securityContext.fsGroup='' \
